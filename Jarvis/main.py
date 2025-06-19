@@ -1,52 +1,39 @@
 import speech_recognition as sr
 import pyttsx3
-import webbrowser
-import datetime
+
+# Initialize recognizer and engine
+r = sr.Recognizer()
+engine = pyttsx3.init()
 
 def speak(text):
-    engine = pyttsx3.init()
     engine.say(text)
     engine.runAndWait()
 
 def listen():
-    r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
         audio = r.listen(source)
 
     try:
+        print("Recognizing...")
         query = r.recognize_google(audio, language='en-in')
         print(f"User said: {query}\n")
+        return query
     except Exception as e:
         print("Say that again please...")
         return "None"
-    return query
 
-def main():
+if __name__ == "__main__":
+    speak("Hello, I am Jarvis. How can I help you?")
     while True:
         query = listen().lower()
 
-        if query == "none":
-            continue
-
-        elif "hello" in query:
-            speak("Hello! How can I help you?")
-
-        elif "exit" in query:
+        if query == "hello":
+            speak("Hello to you too!")
+        elif query == "what's your name":
+            speak("My name is Jarvis.")
+        elif query == "exit":
             speak("Goodbye!")
             break
-
-        elif "open website" in query:
-            speak("Which website do you want me to open?")
-            website = listen().lower()
-            if website != "none":
-                speak(f"Opening {website}")
-                webbrowser.open(website)
-
-        elif "what is the time" in query:
-            now = datetime.datetime.now()
-            current_time = now.strftime("%H:%M:%S")
-            speak(f"The time is {current_time}")
-
-if __name__ == "__main__":
-    main()
+        elif query != "None":
+            speak("I heard you, but I don't know what to do with that yet.")
